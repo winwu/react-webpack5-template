@@ -1,11 +1,13 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = (env) => {
     const isProduction = env.production === true;
 
     return {
+        devtool: isProduction ? isProduction : 'source-map',
         mode: isProduction ? 'production' : 'development',
         entry: {
             app: './src/index.tsx',
@@ -43,7 +45,9 @@ module.exports = (env) => {
                     test: /\.css$/i,
                     use: [
                         {
-                            loader: 'style-loader',
+                            // https://webpack.js.org/plugins/mini-css-extract-plugin/#recommend
+                            // creates separate css files for production
+                            loader: isProduction ? MiniCssExtractPlugin.loader : 'style-loader',
                         },
                         {
                             loader: 'css-loader',
@@ -55,12 +59,10 @@ module.exports = (env) => {
                     ]
                 },
                 {
-                    // test: /\.png/,
-                    // type: 'asset/resource',
                     test: /\.(jpe?g|png|gif)$/,
                     type: 'asset/resource',
                     generator: {
-                        filename: 'img/[name].[hash][ext]'
+                        filename: 'assets/[name].[hash][ext]'
                     }
                 }
             ]
@@ -71,7 +73,11 @@ module.exports = (env) => {
                 title: 'Project Title',
                 template: 'index.html',
             }),
-        ],
+        ].concat(isProduction ? [new MiniCssExtractPlugin({
+            filename: "[name].css",
+            chunkFilename: "[id].css",
+            ignoreOrder: false, // Enable to remove warnings about conflicting order
+        })] : []),
         optimization: {
             splitChunks: {
                 // chunks: 'async',
