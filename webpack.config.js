@@ -18,7 +18,9 @@ module.exports = (env) => {
             chunkFilename: '[id].[hash:8].js',
             publicPath: '/',
             // publicPath: 'https://some.of.com/assets/[fullhash]/',
-            assetModuleFilename: 'images/[hash][ext][query]'
+            assetModuleFilename: 'images/[hash][ext][query]',
+            // clean ./dist before build
+            clean: true,
         },
         resolve: {
             extensions: ['.tsx', '.ts', '.js', '.css', '.json'],
@@ -53,8 +55,13 @@ module.exports = (env) => {
                     ]
                 },
                 {
-                    test: /\.png/,
+                    // test: /\.png/,
+                    // type: 'asset/resource',
+                    test: /\.(jpe?g|png|gif)$/,
                     type: 'asset/resource',
+                    generator: {
+                        filename: 'img/[name].[hash][ext]'
+                    }
                 }
             ]
         },
