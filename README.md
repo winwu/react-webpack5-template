@@ -8,6 +8,10 @@
 * Style loader
 * React
 
+## Requirements
+
+* Node.js 16+
+* VSCode
 
 ## scripts:
 

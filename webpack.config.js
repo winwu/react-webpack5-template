@@ -1,13 +1,13 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = (env) => {
     const isProduction = env.production === true;
 
     return {
-        devtool: isProduction ? isProduction : 'source-map',
+        devtool: isProduction ? false : 'source-map',
         mode: isProduction ? 'production' : 'development',
         entry: {
             app: './src/index.tsx',
@@ -38,8 +38,8 @@ module.exports = (env) => {
                         options: {
                             // disable type checker - we will use it in fork plugin
                             transpileOnly: true,
-                        }
-                    }
+                        },
+                    },
                 },
                 {
                     test: /\.css$/i,
@@ -55,29 +55,41 @@ module.exports = (env) => {
                                 importLoaders: 1,
                                 modules: true,
                             },
-                        }
-                    ]
+                        },
+                    ],
                 },
                 {
                     test: /\.(jpe?g|png|gif)$/,
                     type: 'asset/resource',
                     generator: {
-                        filename: 'assets/[name].[hash][ext]'
-                    }
-                }
-            ]
+                        filename: 'assets/[name].[hash][ext]',
+                    },
+                },
+            ],
         },
         plugins: [
-            new ForkTsCheckerWebpackPlugin(),
+            new ForkTsCheckerWebpackPlugin({
+                eslint: {
+                    enabled: true,
+                    // required - same as command `eslint ./src/**/*.{ts,tsx,js,jsx} --ext .ts,.tsx,.js,.jsx`
+                    files: './src/**/*.{ts,tsx,js,jsx}',
+                },
+            }),
             new HtmlWebpackPlugin({
                 title: 'Project Title',
                 template: 'index.html',
             }),
-        ].concat(isProduction ? [new MiniCssExtractPlugin({
-            filename: "[name].css",
-            chunkFilename: "[id].css",
-            ignoreOrder: false, // Enable to remove warnings about conflicting order
-        })] : []),
+        ].concat(
+            isProduction
+                ? [
+                      new MiniCssExtractPlugin({
+                          filename: '[name].css',
+                          chunkFilename: '[id].css',
+                          ignoreOrder: false, // Enable to remove warnings about conflicting order
+                      }),
+                  ]
+                : [],
+        ),
         optimization: {
             splitChunks: {
                 // chunks: 'async',
@@ -99,5 +111,5 @@ module.exports = (env) => {
                 },
             },
         },
-    }
-}
+    };
+};

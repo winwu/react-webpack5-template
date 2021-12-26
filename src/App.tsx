@@ -8,6 +8,6 @@ const App = () => {
             <img src={demoImage} alt="type something" />
         </div>
     );
-}
+};
 
 export default App;
