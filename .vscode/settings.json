@@ -1,0 +1,22 @@
+{
+    "eslint.format.enable": true,
+    "eslint.workingDirectories": [
+        "./src",
+    ],
+    "prettier.configPath": ".prettierrc.js",
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+        "editor.codeActionsOnSave": {
+            "source.fixAll.eslint": true
+        }
+    },
+    "[typescriptreact]": {
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+        "editor.codeActionsOnSave": {
+            "source.fixAll.eslint": true
+        }
+    },
+}

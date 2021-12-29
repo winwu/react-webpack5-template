@@ -1,6 +1,9 @@
 .DS_Store
 *.swp
-.vscode
+
+.vscode/* 
+!.vscode/settings.json
+!.vscode/extensions.json
 
 node_modules
 dist
